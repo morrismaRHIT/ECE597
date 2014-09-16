@@ -27,10 +27,20 @@
 #define led4 50
 #define led5 51
 
+#define ROWS 10		//number of rows in etch-a-sketch matrix
+#define COLS 10		//number of columns...
+
+#define UP 1
+#define DOWN 2
+#define RIGHT 3
+#define LEFT 4
+
 /****************************************************************
  * Global variables
  ****************************************************************/
 int keepgoing = 1;	// Set to 0 when ctrl-c is pressed
+char matrix[ROWS][COLS];
+int xPos = 0, yPos = 0;
 
 /****************************************************************
  * signal_handler
@@ -42,6 +52,10 @@ void signal_handler(int sig)
 	printf( "Ctrl-C pressed, cleaning up and exiting..\n" );
 	keepgoing = 0;
 }
+
+void draw_matrix(void);
+void move(int dir);
+void clear_matrix(void);
 
 /****************************************************************
  * Main
@@ -108,6 +122,9 @@ int main(int argc, char **argv, char **envp)
 	led5_fd = gpio_fd_open(led5, O_RDONLY);
 
 	timeout = POLL_TIMEOUT;
+	
+	clear_matrix();
+	draw_matrix();
  
 	while (keepgoing) {
 		memset((void*)fdset, 0, sizeof(fdset));
@@ -136,40 +153,41 @@ int main(int argc, char **argv, char **envp)
 			printf("\npoll() failed!\n");
 			return -1;
 		}
-      
-		if (rc == 0) {
-			printf(".");
-		}
             
 		if (fdset[1].revents & POLLPRI) {   //button 1 pressed
 		 lseek(fdset[1].fd, 0, SEEK_SET);
 		 len = read(fdset[1].fd,buf,MAX_BUF);
 			toggle1 = !toggle1;
 			gpio_set_value(led1, toggle1);
+			move(LEFT);
 		}
 		if (fdset[2].revents & POLLPRI) {   //button 2 pressed
 		 lseek(fdset[2].fd,0,SEEK_SET);
 		 len = read(fdset[2].fd, buf, MAX_BUF);
 			toggle2 = !toggle2;
 			gpio_set_value(led2, toggle2);
+			move(DOWN);
 		}
 		if (fdset[3].revents & POLLPRI) {   //button 3 pressed
 		 lseek(fdset[3].fd,0,SEEK_SET);
 		 len = read(fdset[3].fd, buf, MAX_BUF);
 			toggle3 = !toggle3;
 			gpio_set_value(led3, toggle3);
+			move(RIGHT);
 		}
 		if (fdset[4].revents & POLLPRI) {   //button 4 pressed
 		 lseek(fdset[4].fd,0,SEEK_SET);
 		 len = read(fdset[4].fd, buf, MAX_BUF);
 			toggle4 = !toggle4;
 			gpio_set_value(led4, toggle4);
+			move(UP);
 		}
 		if (fdset[5].revents & POLLPRI) {   //button 5 pressed
 		 lseek(fdset[5].fd,0,SEEK_SET);
 		 len = read(fdset[5].fd, buf, MAX_BUF);
 			toggle5 = !toggle5;
 			gpio_set_value(led5, toggle5);
+			clear_matrix();
 		}
 
 		if (fdset[0].revents & POLLIN) {
@@ -177,7 +195,8 @@ int main(int argc, char **argv, char **envp)
 			printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
 		}
 		
-		//etch-a-sketch game goes here
+		//etch-a-sketch goes here
+		draw_matrix();
 
 		fflush(stdout);
 	}
@@ -196,3 +215,49 @@ int main(int argc, char **argv, char **envp)
 	return 0;
 }
 
+void draw_matrix()
+{
+	int i, j;
+	system("clear");
+		for(i = 0; i < ROWS; i++)
+		{
+			for(j = 0; j < COLS; j++)
+			{
+				printf("%c", matrix[i][j]);
+			}
+			printf("\n");
+		}
+}
+
+void clear_matrix()
+{
+	int i, j;
+	for(i = 0; i < ROWS; i++)
+	{
+		for(j = 0; j < COLS; j++)
+		{
+			matrix[i][j] = ' ';
+		}
+	}
+}
+
+void move(int dir)
+{
+	if(dir==UP && yPos > 0)
+	{
+	    yPos = yPos - 1;
+	}
+	else if(dir == DOWN && yPos < ROWS-1)
+	{
+	    yPos++;
+	}
+	else if(dir == RIGHT && xPos < COLS-1)
+	{
+	    xPos++;
+	}
+	else if(dir == LEFT && xPos > 0)
+	{
+	    xPos--;
+	}
+	matrix[yPos][xPos] = 'x';
+}
