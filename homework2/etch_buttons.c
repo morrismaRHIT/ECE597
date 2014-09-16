@@ -176,6 +176,8 @@ int main(int argc, char **argv, char **envp)
 			(void)read(fdset[0].fd, buf, 1);
 			printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
 		}
+		
+		//etch-a-sketch game goes here
 
 		fflush(stdout);
 	}
