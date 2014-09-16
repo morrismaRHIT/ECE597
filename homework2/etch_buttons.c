@@ -35,6 +35,10 @@
 #define RIGHT 3
 #define LEFT 4
 
+#define LED_ON 1
+#define LED_OFF 0
+#define LED_ON_TIME 100000  //time in us to turn led on
+
 /****************************************************************
  * Global variables
  ****************************************************************/
@@ -69,7 +73,6 @@ int main(int argc, char **argv, char **envp)
 	int led3_fd, led4_fd, led5_fd;
 	char buf[MAX_BUF];
 	int len;
-	int toggle1 = 1, toggle2 = 1, toggle3 = 1, toggle4 = 1, toggle5 = 1;
 
 	// Set the signal callback for Ctrl-C
 	signal(SIGINT, signal_handler);
@@ -155,39 +158,44 @@ int main(int argc, char **argv, char **envp)
 		}
             
 		if (fdset[1].revents & POLLPRI) {   //button 1 pressed
-		 lseek(fdset[1].fd, 0, SEEK_SET);
-		 len = read(fdset[1].fd,buf,MAX_BUF);
-			toggle1 = !toggle1;
-			gpio_set_value(led1, toggle1);
+		    lseek(fdset[1].fd, 0, SEEK_SET);
+		    len = read(fdset[1].fd,buf,MAX_BUF);
 			move(LEFT);
+			gpio_set_value(led1, LED_ON);
+			usleep(LED_ON_TIME);
+			gpio_set_value(led1, LED_OFF);
 		}
 		if (fdset[2].revents & POLLPRI) {   //button 2 pressed
-		 lseek(fdset[2].fd,0,SEEK_SET);
-		 len = read(fdset[2].fd, buf, MAX_BUF);
-			toggle2 = !toggle2;
-			gpio_set_value(led2, toggle2);
+		    lseek(fdset[2].fd,0,SEEK_SET);
+		    len = read(fdset[2].fd, buf, MAX_BUF);
 			move(DOWN);
+			gpio_set_value(led2, LED_ON);
+			usleep(LED_ON_TIME);
+			gpio_set_value(led2, LED_OFF);
 		}
 		if (fdset[3].revents & POLLPRI) {   //button 3 pressed
-		 lseek(fdset[3].fd,0,SEEK_SET);
-		 len = read(fdset[3].fd, buf, MAX_BUF);
-			toggle3 = !toggle3;
-			gpio_set_value(led3, toggle3);
+		    lseek(fdset[3].fd,0,SEEK_SET);
+		    len = read(fdset[3].fd, buf, MAX_BUF);
 			move(RIGHT);
+			gpio_set_value(led3, LED_ON);
+			usleep(LED_ON_TIME);
+			gpio_set_value(led3, LED_OFF);
 		}
 		if (fdset[4].revents & POLLPRI) {   //button 4 pressed
-		 lseek(fdset[4].fd,0,SEEK_SET);
-		 len = read(fdset[4].fd, buf, MAX_BUF);
-			toggle4 = !toggle4;
-			gpio_set_value(led4, toggle4);
+		    lseek(fdset[4].fd,0,SEEK_SET);
+		    len = read(fdset[4].fd, buf, MAX_BUF);
 			move(UP);
+			gpio_set_value(led4, LED_ON);
+			usleep(LED_ON_TIME);
+			gpio_set_value(led4, LED_OFF);
 		}
 		if (fdset[5].revents & POLLPRI) {   //button 5 pressed
-		 lseek(fdset[5].fd,0,SEEK_SET);
-		 len = read(fdset[5].fd, buf, MAX_BUF);
-			toggle5 = !toggle5;
-			gpio_set_value(led5, toggle5);
+		    lseek(fdset[5].fd,0,SEEK_SET);
+		    len = read(fdset[5].fd, buf, MAX_BUF);
 			clear_matrix();
+			gpio_set_value(led5, LED_ON);
+			usleep(LED_ON_TIME);
+			gpio_set_value(led5, LED_OFF);
 		}
 
 		if (fdset[0].revents & POLLIN) {
