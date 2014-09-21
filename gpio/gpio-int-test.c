@@ -47,7 +47,7 @@ From https://www.ridgerun.com/developer/wiki/index.php/Gpio-int-test.c
 #define POLL_TIMEOUT (3 * 1000) /* 3 seconds */
 #define MAX_BUF 64
 
-#define button1 7
+#define button1 112
 #define led1 30
 
 /****************************************************************

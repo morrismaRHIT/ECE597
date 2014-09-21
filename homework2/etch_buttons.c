@@ -27,8 +27,8 @@
 #define led4 50
 #define led5 51
 
-#define ROWS 10		//number of rows in etch-a-sketch matrix
-#define COLS 10		//number of columns...
+#define ROWS 20		//number of rows in etch-a-sketch matrix
+#define COLS 30		//number of columns...
 
 #define UP 1
 #define DOWN 2
@@ -150,12 +150,7 @@ int main(int argc, char **argv, char **envp)
 		fdset[5].fd = button5_fd;
 		fdset[5].events = POLLPRI;
 
-		rc = poll(fdset, nfds, timeout);      
-
-		if (rc < 0) {
-			printf("\npoll() failed!\n");
-			return -1;
-		}
+		rc = poll(fdset, nfds, timeout);    
             
 		if (fdset[1].revents & POLLPRI) {   //button 1 pressed
 		    lseek(fdset[1].fd, 0, SEEK_SET);
