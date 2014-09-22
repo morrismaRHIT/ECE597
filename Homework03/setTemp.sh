@@ -11,3 +11,5 @@ HIGH=$4
 i2cset -y $I2CBUS $ADDR 2 $LOW
 
 i2cset -y $I2CBUS $ADDR 3 $HIGH
+
+i2cset -y $I2CBUS $ADDR 1 0

@@ -8,4 +8,4 @@ ADDR=$2
 NUM=$(i2cget -y $BUS $ADDR 0)
 
 FAHR=$((NUM*9/5+32))
-echo $((FAHR))
+echo $NUM "($((FAHR)))"
