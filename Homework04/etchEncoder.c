@@ -1,3 +1,5 @@
+//echo bone_eqep2b > /sys/devices/bone_capemgr.*/slots
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,6 +45,15 @@
 #define LED_OFF 0
 #define LED_ON_TIME 100000  //time in us to turn led on
 
+//var eQEP0 = "/sys/devices/ocp.3/48300000.epwmss/48300180.eqep/",
+//    eQEP1 = "/sys/devices/ocp.3/48302000.epwmss/48302180.eqep/",
+//    eQEP2 = "/sys/devices/ocp.3/48304000.epwmss/48304180.eqep/",
+//    eQEP = eQEP2;
+#define eQEP0 "/sys/devices/ocp.3/48300000.epwmss/48300180.eqep/"
+#define eQEP1 "/sys/devices/ocp.3/48302000.epwmss/48302180.eqep/"
+#define eQEP2 "/sys/devices/ocp.3/48304000.epwmss/48304180.eqep/"
+#define period 100	//period of encoder in ms
+
 /****************************************************************
  * Global variables
  ****************************************************************/
@@ -64,6 +75,8 @@ void signal_handler(int sig)
 void draw_matrix(int file);
 void move(int dir);
 void clear_matrix(void);
+void setupEncoder(int, int);
+int readEncoder(int);
 
 static int check_funcs(int file) {
 	unsigned long funcs;
@@ -112,8 +125,8 @@ static int write_block(int file, __u16 *data) {
  ****************************************************************/
 int main(int argc, char **argv, char **envp)
 {
-	struct pollfd fdset[6];
-	int nfds = 6;
+	struct pollfd fdset[2];
+	int nfds = 2;
 	int gpio_fd, led1_fd, button2_fd, led2_fd, timeout, rc;
 	int button3_fd, button4_fd, button5_fd;
 	int led3_fd, led4_fd, led5_fd;
@@ -122,6 +135,10 @@ int main(int argc, char **argv, char **envp)
 	int res, i2cbus, matrix_addr, file;
 	char filename[20];
 	int force = 0;
+	int lastPos2 = 0, lastPos1 = 0, pos2 = 0, pos1 = 0;
+	int periodFile2, enabledFile2, positionFile2;
+	int periodFile1, enabledFile1, positionFile1;
+	
 	
 	i2cbus = lookup_i2c_bus("1");
 	printf("i2cbus = %d\n", i2cbus);
@@ -137,6 +154,61 @@ int main(int argc, char **argv, char **envp)
 	if (file < 0 || check_funcs(file) || set_slave_addr(file, matrix_addr, force))
 		exit(1);
 		
+	printf("opening eQEP2 period file\n");
+	periodFile2 = open(eQEP2 "period", O_WRONLY);
+	if(periodFile2 < 0)
+	{
+		printf("failed to open eQEP2 period file.\n");
+		exit(1);
+	}
+	printf("opening eQEP2 enabled file\n");
+	enabledFile2 = open(eQEP2 "enabled", O_WRONLY);
+	if(enabledFile2 < 0)
+	{
+		printf("failed to open eQEP2 enabled file.\n");
+		exit(1);
+	}
+	
+	printf("opening eQEP1 period file\n");
+	periodFile1 = open(eQEP1 "period", O_WRONLY);
+	if(periodFile1 < 0)
+	{
+		printf("failed to open eQEP1 period file.\n");
+		exit(1);
+	}
+	printf("opening eQEP1 enabled file\n");
+	enabledFile1 = open(eQEP1 "enabled", O_WRONLY);
+	if(enabledFile1 < 0)
+	{
+		printf("failed to open eQEP1 enabled file.\n");
+		exit(1);
+	}
+	
+	
+	/*periodFile2 = fopen(strcat(eqep2,"period"), "w");
+	if(periodFile2 == NULL)
+	{
+		printf("could not open eQEP2 period file\n");
+		exit(1);
+	}
+	printf("opening enabled file");
+	enabledFile2 = fopen(strcat(eqep2, "enabled"), "w");
+	if(enabledFile2 == NULL)
+	{
+		printf("could not open eQEP2 enabled file\n");
+		exit(1);
+	}
+	printf("opening position file");
+	positionFile2 = fopen(strcat(eqep2, "position"), "r");
+	if(positionFile2 == NULL)
+	{
+		printf("could not open eQEP2 position file\n");
+		exit(1);
+	}*/
+
+	setupEncoder(periodFile2, enabledFile2);
+	setupEncoder(periodFile1, enabledFile1);
+	
 	// Check the return value on these if there is trouble
 	i2c_smbus_write_byte(file, 0x21); // Start oscillator (p10)
 	i2c_smbus_write_byte(file, 0x81); // Disp on, blink off (p11)
@@ -146,119 +218,75 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGINT, signal_handler);
 
 	//for buttons
-	gpio_export(button1);
-	gpio_set_dir(button1, "in");
-	gpio_set_edge(button1, "rising");  // Can be rising, falling or both
-	gpio_fd = gpio_fd_open(button1, O_RDONLY);
-	
-	gpio_export(button2);
-	gpio_set_dir(button2, "in");
-	gpio_set_edge(button2, "rising");  // Can be rising, falling or both
-	button2_fd = gpio_fd_open(button2, O_RDONLY);
-	
-	gpio_export(button3);
-	gpio_set_dir(button3, "in");
-	gpio_set_edge(button3, "rising");  // Can be rising, falling or both
-	button3_fd = gpio_fd_open(button3, O_RDONLY);
-	
-	gpio_export(button4);
-	gpio_set_dir(button4, "in");
-	gpio_set_edge(button4, "rising");  // Can be rising, falling or both
-	button4_fd = gpio_fd_open(button4, O_RDONLY);
-	
 	gpio_export(button5);
 	gpio_set_dir(button5, "in");
 	gpio_set_edge(button5, "rising");  // Can be rising, falling or both
 	button5_fd = gpio_fd_open(button5, O_RDONLY);
-	
-	//for led
-	gpio_export(led1);
-	gpio_set_dir(led1,"out");
-	led1_fd = gpio_fd_open(led1, O_RDONLY);
-	
-	gpio_export(led2);
-	gpio_set_dir(led2,"out");
-	led2_fd = gpio_fd_open(led2, O_RDONLY);
-	
-	gpio_export(led3);
-	gpio_set_dir(led3,"out");
-	led3_fd = gpio_fd_open(led3, O_RDONLY);
-	
-	gpio_export(led4);
-	gpio_set_dir(led4,"out");
-	led4_fd = gpio_fd_open(led4, O_RDONLY);
-	
-	gpio_export(led5);
-	gpio_set_dir(led5,"out");
-	led5_fd = gpio_fd_open(led5, O_RDONLY);
 
 	timeout = POLL_TIMEOUT;
 	
 	clear_matrix();
 	draw_matrix(file);
+	
+	positionFile2 = open(eQEP2 "position", O_RDONLY);
+	if(!(positionFile2 < 0))
+	{
+		lastPos2 = pos2;
+		pos2 = readEncoder(positionFile2);
+	}
+	close(positionFile2);
+	
+	positionFile1 = open(eQEP1 "position", O_RDONLY);
+	if(!(positionFile1 < 0))
+	{
+		lastPos1 = pos1;
+		pos1 = readEncoder(positionFile1);
+	}
+	close(positionFile1);
  
 	while (keepgoing) {
 		memset((void*)fdset, 0, sizeof(fdset));
 
 		fdset[0].fd = STDIN_FILENO;
 		fdset[0].events = POLLIN;
-      
-		fdset[1].fd = gpio_fd;
+		
+		fdset[1].fd = button5_fd;
 		fdset[1].events = POLLPRI;
-		
-		fdset[2].fd = button2_fd;
-		fdset[2].events = POLLPRI;
-		
-		fdset[3].fd = button3_fd;
-		fdset[3].events = POLLPRI;
-		
-		fdset[4].fd = button4_fd;
-		fdset[4].events = POLLPRI;
-		
-		fdset[5].fd = button5_fd;
-		fdset[5].events = POLLPRI;
 
 		rc = poll(fdset, nfds, timeout);    
+		
+		positionFile2 = open(eQEP2 "position", O_RDONLY);
+		if(!(positionFile2 < 0))
+		{
+			lastPos2 = pos2;
+			pos2 = readEncoder(positionFile2);
+		}
+		close(positionFile2);
+		
+		positionFile1 = open(eQEP1 "position", O_RDONLY);
+		if(!(positionFile1 < 0))
+		{
+			lastPos1 = pos1;
+			pos1 = readEncoder(positionFile1);
+		}
+		close(positionFile1);
             
-		if (fdset[1].revents & POLLPRI) {   //button 1 pressed
-		    lseek(fdset[1].fd, 0, SEEK_SET);
-		    len = read(fdset[1].fd,buf,MAX_BUF);
+		if (pos1 < lastPos1) {   
 			move(LEFT);
-			gpio_set_value(led1, LED_ON);
-			usleep(LED_ON_TIME);
-			gpio_set_value(led1, LED_OFF);
 		}
-		if (fdset[2].revents & POLLPRI) {   //button 2 pressed
-		    lseek(fdset[2].fd,0,SEEK_SET);
-		    len = read(fdset[2].fd, buf, MAX_BUF);
+		if (pos2 < lastPos2) {   //button 2 pressed
 			move(DOWN);
-			gpio_set_value(led2, LED_ON);
-			usleep(LED_ON_TIME);
-			gpio_set_value(led2, LED_OFF);
 		}
-		if (fdset[3].revents & POLLPRI) {   //button 3 pressed
-		    lseek(fdset[3].fd,0,SEEK_SET);
-		    len = read(fdset[3].fd, buf, MAX_BUF);
+		if (pos1 > lastPos1) {   
 			move(RIGHT);
-			gpio_set_value(led3, LED_ON);
-			usleep(LED_ON_TIME);
-			gpio_set_value(led3, LED_OFF);
 		}
-		if (fdset[4].revents & POLLPRI) {   //button 4 pressed
-		    lseek(fdset[4].fd,0,SEEK_SET);
-		    len = read(fdset[4].fd, buf, MAX_BUF);
+		if (pos2 > lastPos2) {   //button 4 pressed
 			move(UP);
-			gpio_set_value(led4, LED_ON);
-			usleep(LED_ON_TIME);
-			gpio_set_value(led4, LED_OFF);
 		}
-		if (fdset[5].revents & POLLPRI) {   //button 5 pressed
-		    lseek(fdset[5].fd,0,SEEK_SET);
-		    len = read(fdset[5].fd, buf, MAX_BUF);
+		if (fdset[1].revents & POLLPRI) {   //button 5 pressed
+		    lseek(fdset[1].fd,0,SEEK_SET);
+		    len = read(fdset[1].fd, buf, MAX_BUF);
 			clear_matrix();
-			gpio_set_value(led5, LED_ON);
-			usleep(LED_ON_TIME);
-			gpio_set_value(led5, LED_OFF);
 		}
 
 		if (fdset[0].revents & POLLIN) {
@@ -266,22 +294,22 @@ int main(int argc, char **argv, char **envp)
 			printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
 		}
 		
+		
 		draw_matrix(file);
-		usleep(100000);	//sleep 100 ms
+		
+		usleep(100);	//sleep 100 us
 
 		fflush(stdout);
 	}
 
-	gpio_fd_close(led1_fd);
-	gpio_fd_close(gpio_fd);
-	gpio_fd_close(led2_fd);
-	gpio_fd_close(button2_fd);
-	gpio_fd_close(led3_fd);
-	gpio_fd_close(button3_fd);
-	gpio_fd_close(led4_fd);
-	gpio_fd_close(button4_fd);
-	gpio_fd_close(led5_fd);
 	gpio_fd_close(button5_fd);
+	close(periodFile2);
+	close(positionFile2);
+	close(enabledFile2);
+	
+	close(periodFile1);
+	close(positionFile1);
+	close(enabledFile1);
 	
 	return 0;
 }
@@ -356,4 +384,23 @@ void move(int dir)
 	{
 		matrix[yPos][xPos] = 0;
 	}
+}
+
+void setupEncoder(int periodFile, int enabledFile)
+{
+	char buf[MAX_BUF];
+	int len;
+	len = snprintf(buf, sizeof(buf), "%d", period*1000000);
+	write(periodFile, buf, len);
+	len = snprintf(buf, sizeof(buf), "%d", 1);
+	write(enabledFile, buf, len);
+}
+
+int readEncoder(int positionFile)
+{
+	char buf[MAX_BUF];
+	int pos;
+	read(positionFile, buf, sizeof(buf));
+	pos = atoi(buf);
+	return pos;
 }

@@ -28,6 +28,7 @@
 
 				0x15c 0x37	//P9_17 5 INPUT MODE7 pullup
 				0x158 0x37	//P9_18 4 INPUT MODE7 pullup
+				0x198 0x0f	//P9_30 OUTPUT MODE7 no pull
 
                                /* OUTPUT  GPIO(mode7) 0x07 pulldown, 0x17 pullup, 0x?f no pullup/down */
 			       /* INPUT   GPIO(mode7) 0x27 pulldown, 0x37 pullup, 0x?f no pullup/down */
