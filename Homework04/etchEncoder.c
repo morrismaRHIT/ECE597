@@ -16,7 +16,7 @@
  * Constants
  ****************************************************************/
  
-#define POLL_TIMEOUT (3 * 1000) /* 3 seconds */
+#define POLL_TIMEOUT (100) /* 100 milliseconds */
 #define MAX_BUF 64
 
 #define BICOLOR		// undef if using a single color display
@@ -245,6 +245,7 @@ int main(int argc, char **argv, char **envp)
 	close(positionFile1);
  
 	while (keepgoing) {
+		//printf("start loop\n");
 		memset((void*)fdset, 0, sizeof(fdset));
 
 		fdset[0].fd = STDIN_FILENO;
@@ -253,7 +254,11 @@ int main(int argc, char **argv, char **envp)
 		fdset[1].fd = button5_fd;
 		fdset[1].events = POLLPRI;
 
+		printf("poll\n");
+
 		rc = poll(fdset, nfds, timeout);    
+		
+		//printf("open files\n");
 		
 		positionFile2 = open(eQEP2 "position", O_RDONLY);
 		if(!(positionFile2 < 0))
@@ -270,6 +275,8 @@ int main(int argc, char **argv, char **envp)
 			pos1 = readEncoder(positionFile1);
 		}
 		close(positionFile1);
+		
+		//printf("files closed\n");
             
 		if (pos1 < lastPos1) {   
 			move(LEFT);
@@ -288,6 +295,8 @@ int main(int argc, char **argv, char **envp)
 		    len = read(fdset[1].fd, buf, MAX_BUF);
 			clear_matrix();
 		}
+		
+		//printf("moved\n");
 
 		if (fdset[0].revents & POLLIN) {
 			(void)read(fdset[0].fd, buf, 1);
@@ -297,9 +306,11 @@ int main(int argc, char **argv, char **envp)
 		
 		draw_matrix(file);
 		
-		usleep(100);	//sleep 100 us
+		//printf("drawn.\n");
 
 		fflush(stdout);
+		
+		//printf("end loop\n");
 	}
 
 	gpio_fd_close(button5_fd);
