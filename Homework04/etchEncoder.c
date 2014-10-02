@@ -254,7 +254,7 @@ int main(int argc, char **argv, char **envp)
 		fdset[1].fd = button5_fd;
 		fdset[1].events = POLLPRI;
 
-		printf("poll\n");
+		//printf("poll\n");
 
 		rc = poll(fdset, nfds, timeout);    
 		
