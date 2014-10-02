@@ -35,6 +35,18 @@ body {
 
 }
 
+.red {
+	border: 1px solid #00ee00;
+	background-color: red;
+
+}
+
+.both {
+	border: 1px solid #00ee00;
+	background-color: yellow;
+
+}
+
 #i2cNum {
 	text-align: right; 
 	width:	3em;

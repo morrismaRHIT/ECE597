@@ -32,5 +32,5 @@
 #define GPIO_16  (1<<16)
 #define GPIO_17  (1<<17)
 #define GPIO_23  (1<<23)
-#define GPIO_28  (1<<28)
+#define GPIO_60  (1<<28)
 #endif
