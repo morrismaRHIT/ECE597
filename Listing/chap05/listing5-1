@@ -1,0 +1,125 @@
+The kernel build sequence looks very different from the listing in the text:
+
+---------------------------------------------------------------------------
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CHK     kernel/config_data.h
+  Building modules, stage 2.
+  Kernel: arch/arm/boot/Image is ready
+  Kernel: arch/arm/boot/zImage is ready
+  MODPOST 1274 modules
+-----------------------------
+make -j8 ARCH=arm LOCALVERSION=-bone67 CROSS_COMPILE=/home/morrisma/Courses/ECE597/repo/bb-kernel/dl/gcc-linaro-arm-linux-gnueabihf-4.7-2013.04-20130415_linux/bin/arm-linux-gnueabihf- dtbs
+-----------------------------
+`arch/arm/boot/zImage' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/3.8.13-bone67.zImage'
+`.config' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/config-3.8.13-bone67'
+-rwxrwxr-x 1 morrisma morrisma 5.3M Oct 16 08:28 /home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/3.8.13-bone67.zImage
+-----------------------------
+Building modules archive...
+Compressing 3.8.13-bone67-modules.tar.gz...
+-rw-rw-r-- 1 morrisma morrisma 12M Oct 16 08:28 /home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/3.8.13-bone67-modules.tar.gz
+-----------------------------
+Building firmware archive...
+Compressing 3.8.13-bone67-firmware.tar.gz...
+-rw-rw-r-- 1 morrisma morrisma 1.2M Oct 16 08:28 /home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/3.8.13-bone67-firmware.tar.gz
+-----------------------------
+Building dtbs archive...
+`./arch/arm/boot/dts/omap4-panda.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-panda.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-lcd7-01-00a3.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-lcd7-01-00a3.dtb'
+`./arch/arm/boot/dts/omap5-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap5-evm.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-lcd7-01-00a2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-lcd7-01-00a2.dtb'
+`./arch/arm/boot/dts/omap4-sdp-es23plus.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-sdp-es23plus.dtb'
+`./arch/arm/boot/dts/omap4-sdp.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-sdp.dtb'
+`./arch/arm/boot/dts/omap3-zoom3.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-zoom3.dtb'
+`./arch/arm/boot/dts/omap2420-n800.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap2420-n800.dtb'
+`./arch/arm/boot/dts/omap3-sbc-t3730.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-sbc-t3730.dtb'
+`./arch/arm/boot/dts/omap3-sbc-t3530.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-sbc-t3530.dtb'
+`./arch/arm/boot/dts/dra7-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/dra7-evm.dtb'
+`./arch/arm/boot/dts/am335x-bone-ttyO1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-ttyO1.dtb'
+`./arch/arm/boot/dts/am335x-nano.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-nano.dtb'
+`./arch/arm/boot/dts/am335x-tester.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-tester.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-tobi.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-tobi.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-alto35.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-alto35.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-lcd4-01-00a1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-lcd4-01-00a1.dtb'
+`./arch/arm/boot/dts/am335x-base0033.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-base0033.dtb'
+`./arch/arm/boot/dts/omap3-cm-t3530.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-cm-t3530.dtb'
+`./arch/arm/boot/dts/omap3-tobi.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-tobi.dtb'
+`./arch/arm/boot/dts/omap3-beagle-xm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-beagle-xm.dtb'
+`./arch/arm/boot/dts/am437x-gp-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am437x-gp-evm.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-cape-bone-argus.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-cape-bone-argus.dtb'
+`./arch/arm/boot/dts/omap3-overo-chestnut43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-chestnut43.dtb'
+`./arch/arm/boot/dts/omap3-overo-tobi.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-tobi.dtb'
+`./arch/arm/boot/dts/omap5-uevm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap5-uevm.dtb'
+`./arch/arm/boot/dts/am335x-bone-ttyO4.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-ttyO4.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-4dcape-70.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-4dcape-70.dtb'
+`./arch/arm/boot/dts/am3517_mt_ventoux.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am3517_mt_ventoux.dtb'
+`./arch/arm/boot/dts/am335x-bone-audio.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-audio.dtb'
+`./arch/arm/boot/dts/am3517-craneboard.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am3517-craneboard.dtb'
+`./arch/arm/boot/dts/omap3-beagle-xm-ab.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-beagle-xm-ab.dtb'
+`./arch/arm/boot/dts/omap3-igep0020.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-igep0020.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-audio.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-audio.dtb'
+`./arch/arm/boot/dts/omap3430-sdp.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3430-sdp.dtb'
+`./arch/arm/boot/dts/omap2420-h4.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap2420-h4.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-ttyO2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-ttyO2.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-rtc-01-00a1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-rtc-01-00a1.dtb'
+`./arch/arm/boot/dts/omap3-beagle.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-beagle.dtb'
+`./arch/arm/boot/dts/am335x-evmsk.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-evmsk.dtb'
+`./arch/arm/boot/dts/omap3-ldp.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-ldp.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-4dcape-70t.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-4dcape-70t.dtb'
+`./arch/arm/boot/dts/am335x-boneblack.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack.dtb'
+`./arch/arm/boot/dts/am335x-bone.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone.dtb'
+`./arch/arm/boot/dts/am43x-epos-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am43x-epos-evm.dtb'
+`./arch/arm/boot/dts/omap3-igep0030.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-igep0030.dtb'
+`./arch/arm/boot/dts/omap3-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-evm.dtb'
+`./arch/arm/boot/dts/omap4-duovero-parlor.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-duovero-parlor.dtb'
+`./arch/arm/boot/dts/omap3-n900.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-n900.dtb'
+`./arch/arm/boot/dts/omap3-n9.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-n9.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-palo43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-palo43.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-4dcape-43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-4dcape-43.dtb'
+`./arch/arm/boot/dts/omap2420-n810.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap2420-n810.dtb'
+`./arch/arm/boot/dts/omap3-cm-t3730.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-cm-t3730.dtb'
+`./arch/arm/boot/dts/omap3-sbc-t3517.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-sbc-t3517.dtb'
+`./arch/arm/boot/dts/am335x-bone-rtc-01-00a1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-rtc-01-00a1.dtb'
+`./arch/arm/boot/dts/am335x-bone-lcd4-01-00a1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-lcd4-01-00a1.dtb'
+`./arch/arm/boot/dts/am335x-bone-crypto-00a0.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-crypto-00a0.dtb'
+`./arch/arm/boot/dts/am3517-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am3517-evm.dtb'
+`./arch/arm/boot/dts/omap3-overo-gallop43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-gallop43.dtb'
+`./arch/arm/boot/dts/omap3-gta04.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-gta04.dtb'
+`./arch/arm/boot/dts/arduino-tre.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/arduino-tre.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-crypto-00a0.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-crypto-00a0.dtb'
+`./arch/arm/boot/dts/omap3-overo-summit.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-summit.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-ttyO5.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-ttyO5.dtb'
+`./arch/arm/boot/dts/omap3-lilly-dbb056.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-lilly-dbb056.dtb'
+`./arch/arm/boot/dts/omap2420-n810-wimax.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap2420-n810-wimax.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-lcd3-01-00a2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-lcd3-01-00a2.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-ttyO4.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-ttyO4.dtb'
+`./arch/arm/boot/dts/am335x-bone-lcd3-01-00a2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-lcd3-01-00a2.dtb'
+`./arch/arm/boot/dts/omap3-overo-alto35.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-alto35.dtb'
+`./arch/arm/boot/dts/am335x-bone-ttyO2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-ttyO2.dtb'
+`./arch/arm/boot/dts/omap3-devkit8000.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-devkit8000.dtb'
+`./arch/arm/boot/dts/omap4-var-som.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-var-som.dtb'
+`./arch/arm/boot/dts/omap2430-sdp.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap2430-sdp.dtb'
+`./arch/arm/boot/dts/omap3-overo-palo43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-palo43.dtb'
+`./arch/arm/boot/dts/omap3-cm-t3517.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-cm-t3517.dtb'
+`./arch/arm/boot/dts/am335x-bone-lcd7-01-00a2.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-lcd7-01-00a2.dtb'
+`./arch/arm/boot/dts/omap4-panda-a4.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-panda-a4.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-gallop43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-gallop43.dtb'
+`./arch/arm/boot/dts/am335x-bone-ttyO5.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-ttyO5.dtb'
+`./arch/arm/boot/dts/am335x-evm.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-evm.dtb'
+`./arch/arm/boot/dts/omap3-evm-37xx.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-evm-37xx.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-4dcape-43t.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-4dcape-43t.dtb'
+`./arch/arm/boot/dts/omap3-n950.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-n950.dtb'
+`./arch/arm/boot/dts/am335x-bone-lcd7-01-00a3.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-lcd7-01-00a3.dtb'
+`./arch/arm/boot/dts/am335x-boneblack-ttyO1.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-boneblack-ttyO1.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-summit.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-summit.dtb'
+`./arch/arm/boot/dts/omap4-panda-es.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap4-panda-es.dtb'
+`./arch/arm/boot/dts/omap3-overo-storm-chestnut43.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/omap3-overo-storm-chestnut43.dtb'
+`./arch/arm/boot/dts/am335x-bone-cape-bone-argus.dtb' -> `/home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/tmp/am335x-bone-cape-bone-argus.dtb'
+Compressing 3.8.13-bone67-dtbs.tar.gz...
+-rw-rw-r-- 1 morrisma morrisma 573K Oct 16 08:28 /home/morrisma/Courses/ECE597/repo/bb-kernel/deploy/3.8.13-bone67-dtbs.tar.gz
+-----------------------------
+Script Complete
+eewiki.net: [user@localhost:~$ export kernel_version=3.8.13-bone67]
